@@ -1,6 +1,10 @@
 # MageLock
 Global deployment lock task for Magallanes deployment tool
 
+## Installation
+
+    composer require 'tomasgluchman/mage-lock:~0.0'
+
 ## Usage
 
 ### Config:
