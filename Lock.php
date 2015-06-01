@@ -1,7 +1,6 @@
 <?php
 /**
- * Custom task for Magallanes deployment tool (http://www.magephp.com)
- * for performing global deployment locks onto defined environment hosts.
+ * Global deployment lock task for Magallanes deployment tool (http://www.magephp.com).
  *
  * @licence The MIT Licence (MIT)
  * 
@@ -104,7 +103,6 @@ class Lock extends AbstractTask
         $locked = $this->isLocked();
 
         if ($locked && $lockAction !== self::UNLOCK) {
-            // throw new SkipException('Remote server locked - ' . json_encode($locked));
             $message = 'Remote server locked';
             if (isset($locked['name'], $locked['email'])) {
                 $message .= ' by ' . implode('/', array($locked['name'], $locked['email']));
@@ -121,13 +119,19 @@ class Lock extends AbstractTask
         if ($lockAction === self::LOCK) {
             $lockData = array();
 
-            $this->runCommandLocal('gitt config --get user.name', $userName);
+            $this->runCommandLocal('git config --get user.name', $userName);
             $this->runCommandLocal('git config --get user.email', $userEmail);
 
-            Console::output('Your name (enter to '. $userName . ' leave blank): ', 0, 0);
+            Console::output('Your name ' . (!empty($userName) ? '[' . $userName . ']' : '(enter to leave blank)') . ': ', 0, 0);
             $lockData['name'] = Console::readInput();
-            Console::output('Your email (enter to leave blank): ', 0, 0);
+            if (empty($lockData['name']) && !empty($userName)) {
+                $lockData['name'] = $userName;
+            }
+            Console::output('Your email ' . (!empty($userEmail) ? '[' . $userEmail . ']' : '(enter to leave blank)') . ': ', 0, 0);
             $lockData['email'] = Console::readInput();
+            if (empty($lockData['email']) && !empty($userEmail)) {
+                $lockData['email'] = $userEmail;
+            }
             Console::output('Reason of lock (enter to leave blank): ', 0, 0);
             $lockData['reason'] = Console::readInput();
             $lockData['date'] = date('Y-m-d H:i:s');
