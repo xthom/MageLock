@@ -5,7 +5,7 @@
     "keywords": ["deployment", "lock", "magallanes", "mage"],
     "homepage": "https://github.com/xthom/MageLock",
     "require": {
-        "andres-montanez/magallanes": "^1.0"
+        "andres-montanez/magallanes": "^1.0.4"
     },
     "license": "MIT",
     "authors": [
